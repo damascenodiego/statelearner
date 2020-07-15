@@ -65,6 +65,7 @@ import nl.cypherpunk.statelearner.tls.TLSSUL;
 
 /**
  * @author Joeri de Ruiter (joeri@cs.ru.nl)
+ * @author Diego Damasceno (damasceno.diego@gmail.com)
  */
 public class Learner {
 	LearningConfig config;
@@ -320,13 +321,20 @@ public class Learner {
 		FileHandler fhLearnlibLog = new FileHandler(output_dir + "/learnlib.log");
 		loggerLearnlib.addHandler(fhLearnlibLog);
 		fhLearnlibLog.setFormatter(new SimpleFormatter());
-		
+
 		LearnLogger loggerLearner = LearnLogger.getLogger(Learner.class.getSimpleName());
 		loggerLearner.setLevel(Level.ALL);
 		FileHandler fhLearnerLog = new FileHandler(output_dir + "/learner.log");
 		loggerLearner.addHandler(fhLearnerLog);
 		fhLearnerLog.setFormatter(new SimpleFormatter());
 		loggerLearner.addHandler(new ConsoleHandler());
+
+		LearnLogger loggerTls = LearnLogger.getLogger(TLSSUL.class.getSimpleName());
+		loggerTls.setLevel(Level.ALL);
+		FileHandler fhTlsLog = new FileHandler(output_dir + "/tlssul.log");
+		loggerTls.addHandler(fhTlsLog);
+		fhTlsLog.setFormatter(new SimpleFormatter());
+		loggerTls.addHandler(new ConsoleHandler());
 		
 		LearnLogger loggerLearningQueries = LearnLogger.getLogger("learning_queries");
 		loggerLearningQueries.setLevel(Level.ALL);
