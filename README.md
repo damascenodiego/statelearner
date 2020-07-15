@@ -18,13 +18,13 @@ Build a self-contained jar file using the following command:
 
 ## Usage
 
-`java -jar stateLearner-0.0.1-SNAPSHOT.jar <configuration file>`
+`java -jar stateLearner-0.0.2-SNAPSHOT.jar <configuration file>`
 
 Example configurations can be found in the 'examples' directory. To run the OpenSSL example:
 
 ```
 cd examples/openssl
-java -jar ../../target/stateLearner-0.0.1-SNAPSHOT.jar server.properties
+java -jar ../../target/stateLearner-0.0.2-SNAPSHOT.jar server.properties
 ```
 
 ## Publications
