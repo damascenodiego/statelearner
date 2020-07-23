@@ -22,9 +22,7 @@ def main(argv):
             input_file = arg
             output_file = re.sub("\\.log$","",arg)+".tab"
     _in = open(input_file, "r")
-    _out = open(output_file, "w")
-    _out.write("ResetId\tSymbolId\tOpType\tDuration\tInput\tOutput")
-    _out.write("\n")
+    print("ResetId\tSymbolId\tOpType\tDuration\tInput\tOutput")
 
     line = _in.readline()
     id_reset = -1
@@ -36,14 +34,12 @@ def main(argv):
         if len(rst_f) != 0:
             id_reset += 1
             id_iosym = -1
-            _out.write(str(id_reset) + "\t" + str(id_iosym) + "\t" + "Reset" + "\t" + rst_f[0] + "\t" + "Reset" + "\t" + "Reset")
-            _out.write("\n")
+            print(str(id_reset) + "\t" + str(id_iosym) + "\t" + "Reset" + "\t" + rst_f[0] + "\t" + "Reset" + "\t" + "Reset")
         elif len(tio_f) != 0:
             id_iosym += 1
             tio = tio_f[0]
-            _out.write(str(id_reset) + "\t" + str(id_iosym) + "\t" + "TimedIO" + "\t" + tio[0] + "\t" + tio[1] + "\t" + tio[2])
-            _out.write("\n")
-        # _out.write(line)
+            print(str(id_reset) + "\t" + str(id_iosym) + "\t" + "TimedIO" + "\t" + tio[0] + "\t" + tio[1] + "\t" + tio[2])
+        # print(line)
         line = _in.readline()
 
 
