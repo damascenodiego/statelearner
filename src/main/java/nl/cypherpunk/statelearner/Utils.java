@@ -16,6 +16,13 @@
 
 package nl.cypherpunk.statelearner;
 
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.commons.util.mappings.MutableMapping;
+import net.automatalib.words.Word;
+
+import java.util.*;
+import java.util.function.Consumer;
+
 public class Utils {
 	private static String CHARS = "0123456789ABCDEF";
 	public static String bytesToHex(byte[] bytes) {
@@ -42,5 +49,65 @@ public class Utils {
 		}
 			
 		return bytes;
+	}
+
+	/**
+	 * Utility method that allows to compute a state and transition cover simultaneously.
+	 *
+	 * @param automaton
+	 *         the automaton for which the covers should be computed
+	 * @param inputs
+	 *         the set of input symbols allowed in the cover sequences
+	 * @param states
+	 *         the collection in which the state cover sequences will be stored
+	 * @param transitions
+	 *         the collection in which the transition cover sequences will be stored
+	 *
+	 * @see #randomTransitionCover(MealyMachine, Collection, LinkedHashSet, LinkedHashSet)
+	 */
+
+	public static void randomTransitionCover(MealyMachine<Integer, String, ?, String> automaton,
+											  Collection<String> inputs,
+											  LinkedHashSet<Word<String>> states,
+											  LinkedHashSet<Word<String>> transitions) {
+
+		Integer init = automaton.getInitialState();
+
+		if (init == null) {
+			return;
+		}
+
+		MutableMapping<Integer, Word<String>> reach = automaton.createStaticStateMapping();
+		reach.put(init, Word.epsilon());
+
+		Queue<Integer> bfsQueue = new ArrayDeque<>();
+		bfsQueue.add(init);
+
+		states.add(Word.epsilon());
+
+		Integer curr;
+
+		List<String> inputs_rnd = new ArrayList<>(inputs);
+		while ((curr = bfsQueue.poll()) != null) {
+			Word<String> as = reach.get(curr);
+			assert as != null;
+
+			Collections.shuffle(inputs_rnd);
+			for (String in : inputs_rnd) {
+				Integer succ = automaton.getSuccessor(curr, in);
+				if (succ == null) {
+					continue;
+				}
+
+				final Word<String> succAs = as.append(in);
+
+				if (reach.get(succ) == null) {
+					reach.put(succ, succAs);
+					states.add(succAs);
+					bfsQueue.add(succ);
+				}
+				transitions.add(succAs);
+			}
+		}
 	}
 }

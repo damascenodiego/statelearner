@@ -23,8 +23,7 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -207,7 +206,24 @@ public class Learner {
 				throw new Exception("Unknown equivalence algorithm " + config.eqtest);
 		}	
 	}
-	
+
+	public void sampleTimedIOs() throws IOException, InterruptedException {
+		MealyMachine<Integer, String, ?, String> hypothesis = (MealyMachine<Integer, String, ?, String>) learningAlgorithm.getHypothesisModel();
+
+		List<String> abc_lst = new ArrayList<>(alphabet);
+		for (int sampleID = 0; sampleID < config.nr_tio; sampleID++) {
+			LinkedHashSet<Word<String>> qSet = new LinkedHashSet<>();
+			LinkedHashSet<Word<String>> tSet = new LinkedHashSet<>();
+			Utils.randomTransitionCover(hypothesis,abc_lst,qSet,tSet);
+			for (Word<String> seq: tSet) {
+				this.sul.pre();
+				for (String in: seq) {
+					this.sul.step(in);
+				}
+			}
+		}
+
+	}
 	public void learn() throws IOException, InterruptedException {
 		LearnLogger log = LearnLogger.getLogger(Learner.class.getSimpleName());
 
@@ -361,5 +377,6 @@ public class Learner {
 	
 		Learner learner = new Learner(config);
 		learner.learn();
+		learner.sampleTimedIOs();
 	}
 }

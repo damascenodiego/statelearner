@@ -39,10 +39,13 @@ public class LearningConfig {
 	
 	String learning_algorithm = "lstar";
 	String eqtest = "randomwords";
-	
+
 	// Used for W-Method and Wp-method
 	int max_depth = 10;
-	
+
+	// Used for setting the number of timed observations per transition
+	int nr_tio = 30;
+
 	// Used for Random words
 	int min_length = 5;
 	int max_length = 10;
@@ -94,9 +97,12 @@ public class LearningConfig {
 		
 		if(properties.getProperty("max_length") != null)
 			max_length = Integer.parseInt(properties.getProperty("max_length"));
-		
+
 		if(properties.getProperty("nr_queries") != null)
 			nr_queries = Integer.parseInt(properties.getProperty("nr_queries"));
+
+		if(properties.getProperty("nr_tio") != null)
+			nr_tio = Integer.parseInt(properties.getProperty("nr_tio"));
 		
 		if(properties.getProperty("seed") != null)
 			seed = Integer.parseInt(properties.getProperty("seed"));		
