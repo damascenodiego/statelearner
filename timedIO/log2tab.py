@@ -2,8 +2,8 @@
 
 import sys, getopt, re
 
-reset_re = re.compile("^INFO: Step Reset: \\[([0-9]+)\\]")
-timedIO_re = re.compile("^INFO: Step TimedIO: \\[([0-9]+)\\]\t([\\w\\.]+)\t/\t([\\w\\.]+)")
+reset_re   = re.compile("^\[([0-9\-\ :\.]+)\] \[INFO\] Step Reset: \[([0-9]+)\]")
+timedIO_re = re.compile("^\\[([0-9\-\ :\.]+)\\] \[INFO\] Step TimedIO: \\[([0-9]+)\\]\t([\\w\\.]+)\t/\t([\\w\\.]+)")
 
 
 def main(argv):
@@ -22,7 +22,7 @@ def main(argv):
             input_file = arg
             output_file = re.sub("\\.log$","",arg)+".tab"
     _in = open(input_file, "r")
-    print("ResetId\tSymbolId\tOpType\tDuration\tInput\tOutput")
+    print("Timestamp\tResetId\tSymbolId\tOpType\tDuration\tInput\tOutput")
 
     line = _in.readline()
     id_reset = -1
@@ -32,13 +32,14 @@ def main(argv):
         tio_f = timedIO_re.findall(line)
 
         if len(rst_f) != 0:
+            rst_f=rst_f[0]
             id_reset += 1
             id_iosym = -1
-            print(str(id_reset) + "\t" + str(id_iosym) + "\t" + "Reset" + "\t" + rst_f[0] + "\t" + "Reset" + "\t" + "Reset")
+            print(rst_f[0] + "\t" + str(id_reset) + "\t" + str(id_iosym) + "\t" + "Reset" + "\t" + rst_f[1] + "\t" + "Reset" + "\t" + "Reset")
         elif len(tio_f) != 0:
             id_iosym += 1
             tio = tio_f[0]
-            print(str(id_reset) + "\t" + str(id_iosym) + "\t" + "TimedIO" + "\t" + tio[0] + "\t" + tio[1] + "\t" + tio[2])
+            print(tio[0] + "\t" + str(id_reset) + "\t" + str(id_iosym) + "\t" + "TimedIO" + "\t" + tio[1] + "\t" + tio[2] + "\t" + tio[3])
         # print(line)
         line = _in.readline()
 
