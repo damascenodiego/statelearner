@@ -50,7 +50,7 @@ public class LearningConfig {
 	int min_length = 5;
 	int max_length = 10;
 	int nr_queries = 100;
-	int seed = 1;
+	int reset_delay = 1;
 	
 	public LearningConfig(String filename) throws IOException {
 		properties = new Properties();
@@ -104,7 +104,7 @@ public class LearningConfig {
 		if(properties.getProperty("nr_tio") != null)
 			nr_tio = Integer.parseInt(properties.getProperty("nr_tio"));
 		
-		if(properties.getProperty("seed") != null)
-			seed = Integer.parseInt(properties.getProperty("seed"));		
+		if(properties.getProperty("reset_delay") != null)
+			reset_delay = Integer.parseInt(properties.getProperty("reset_delay"));
 	}
 }

@@ -49,6 +49,7 @@ import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.SULOracle;
 import de.learnlib.statistics.Counter;
 import de.learnlib.statistics.SimpleProfiler;
+import io.github.damascenodiego.MyLogFormatter;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.util.graphs.dot.GraphDOT;
 import net.automatalib.words.Word;
@@ -61,6 +62,19 @@ import nl.cypherpunk.statelearner.socket.SocketConfig;
 import nl.cypherpunk.statelearner.socket.SocketSUL;
 import nl.cypherpunk.statelearner.tls.TLSConfig;
 import nl.cypherpunk.statelearner.tls.TLSSUL;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
 
 /**
  * @author Joeri de Ruiter (joeri@cs.ru.nl)
@@ -75,7 +89,7 @@ public class Learner {
 	MealyLogOracle<String, String> logMemOracle;
 	MealyCounterOracle<String, String> statsMemOracle;
 	MealyCacheOracle<String, String> cachedMemOracle;
-	MealyCounterOracle<String, String> statsCachedMemOracle;	
+	MealyCounterOracle<String, String> statsCachedMemOracle;
 	LearningAlgorithm<MealyMachine<?, String, ?, String>, String, Word<String>> learningAlgorithm;
 
 	SULOracle<String, String> eqOracle;
@@ -211,13 +225,14 @@ public class Learner {
 		MealyMachine<Integer, String, ?, String> hypothesis = (MealyMachine<Integer, String, ?, String>) learningAlgorithm.getHypothesisModel();
 
 		List<String> abc_lst = new ArrayList<>(alphabet);
-		for (int sampleID = 0; sampleID < config.nr_tio; sampleID++) {
-			LinkedHashSet<Word<String>> qSet = new LinkedHashSet<>();
-			LinkedHashSet<Word<String>> tSet = new LinkedHashSet<>();
-			Utils.randomTransitionCover(hypothesis,abc_lst,qSet,tSet);
-			for (Word<String> seq: tSet) {
+		LinkedHashSet<Word<String>> qSet = new LinkedHashSet<>();
+		LinkedHashSet<Word<String>> tSet = new LinkedHashSet<>();
+		Utils.randomTransitionCover(hypothesis, abc_lst, qSet, tSet);
+		for (Word<String> seq : tSet) {
+			for (int sampleID = 0; sampleID < config.nr_tio; sampleID++) {
+				TimeUnit.MILLISECONDS.sleep(config.reset_delay);
 				this.sul.pre();
-				for (String in: seq) {
+				for (String in : seq) {
 					this.sul.step(in);
 				}
 			}
@@ -336,34 +351,34 @@ public class Learner {
 		loggerLearnlib.setLevel(Level.ALL);
 		FileHandler fhLearnlibLog = new FileHandler(output_dir + "/learnlib.log");
 		loggerLearnlib.addHandler(fhLearnlibLog);
-		fhLearnlibLog.setFormatter(new SimpleFormatter());
+		fhLearnlibLog.setFormatter(new MyLogFormatter());
 
 		LearnLogger loggerLearner = LearnLogger.getLogger(Learner.class.getSimpleName());
 		loggerLearner.setLevel(Level.ALL);
 		FileHandler fhLearnerLog = new FileHandler(output_dir + "/learner.log");
 		loggerLearner.addHandler(fhLearnerLog);
-		fhLearnerLog.setFormatter(new SimpleFormatter());
+		fhLearnerLog.setFormatter(new MyLogFormatter());
 		loggerLearner.addHandler(new ConsoleHandler());
 
 		LearnLogger loggerTls = LearnLogger.getLogger(TLSSUL.class.getSimpleName());
 		loggerTls.setLevel(Level.ALL);
 		FileHandler fhTlsLog = new FileHandler(output_dir + "/tlssul.log");
 		loggerTls.addHandler(fhTlsLog);
-		fhTlsLog.setFormatter(new SimpleFormatter());
+		fhTlsLog.setFormatter(new MyLogFormatter());
 		loggerTls.addHandler(new ConsoleHandler());
 		
 		LearnLogger loggerLearningQueries = LearnLogger.getLogger("learning_queries");
 		loggerLearningQueries.setLevel(Level.ALL);
 		FileHandler fhLearningQueriesLog = new FileHandler(output_dir + "/learning_queries.log");
 		loggerLearningQueries.addHandler(fhLearningQueriesLog);
-		fhLearningQueriesLog.setFormatter(new SimpleFormatter());
+		fhLearningQueriesLog.setFormatter(new MyLogFormatter());
 		loggerLearningQueries.addHandler(new ConsoleHandler());		
 
 		LearnLogger loggerEquivalenceQueries = LearnLogger.getLogger("equivalence_queries");
 		loggerEquivalenceQueries.setLevel(Level.ALL);
 		FileHandler fhEquivalenceQueriesLog = new FileHandler(output_dir + "/equivalence_queries.log");
 		loggerEquivalenceQueries.addHandler(fhEquivalenceQueriesLog);
-		fhEquivalenceQueriesLog.setFormatter(new SimpleFormatter());
+		fhEquivalenceQueriesLog.setFormatter(new MyLogFormatter());
 		loggerEquivalenceQueries.addHandler(new ConsoleHandler());	
 	}
 	
