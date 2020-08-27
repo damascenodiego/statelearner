@@ -26,7 +26,7 @@ for i in ${list};
 		then
 		echo "No learnedModel.dot exists for ${version}. Start learning"
 		cd ${statelearner_dir};
-		java -jar stateLearner-0.0.1-SNAPSHOT.jar "${config_dir}/config_${version}_server.properties";
+		java -jar stateLearner-0.0.2-SNAPSHOT.jar "${config_dir}/config_${version}_server.properties";
 		cd ${start_dir}
 	else
 		echo "learnedModel.dot exists for ${version}"

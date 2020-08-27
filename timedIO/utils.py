@@ -56,8 +56,17 @@ class MealyMachine:
         outputs = []
         for an_in in inputs:
             if an_in == 'Reset':
+                outputs.append("Reset")
                 curr = self._s0
             else:
-                curr = self._graph[curr][an_in][0]
-            outputs.append(curr)
+                outputs.append(self._graph[curr][an_in][0])
+                curr = self._graph[curr][an_in][1]
+
         return outputs
+
+# mm = MealyMachine("learnedModel.dot")
+#
+# print(mm.list_origin(["ApplicationDataEmpty"]))
+# print(["ApplicationDataEmpty"])
+# print(mm.list_outputs(["ApplicationDataEmpty"]))
+# print(mm.list_destination(["ApplicationDataEmpty"]))
