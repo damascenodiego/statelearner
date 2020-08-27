@@ -62,14 +62,17 @@ public class Utils {
 	 *         the collection in which the state cover sequences will be stored
 	 * @param transitions
 	 *         the collection in which the transition cover sequences will be stored
+	 * @param shuffle_inputs
+	 *         shuffle the input domain to randomize the sequences
 	 *
-	 * @see #randomTransitionCover(MealyMachine, Collection, LinkedHashSet, LinkedHashSet)
+	 * @see #transitionCover(MealyMachine, Collection, LinkedHashSet, LinkedHashSet, boolean)
 	 */
 
-	public static void randomTransitionCover(MealyMachine<Integer, String, ?, String> automaton,
+	public static void transitionCover(MealyMachine<Integer, String, ?, String> automaton,
 											  Collection<String> inputs,
 											  LinkedHashSet<Word<String>> states,
-											  LinkedHashSet<Word<String>> transitions) {
+											  LinkedHashSet<Word<String>> transitions,
+											  boolean shuffle_inputs) {
 
 		Integer init = automaton.getInitialState();
 
@@ -92,7 +95,7 @@ public class Utils {
 			Word<String> as = reach.get(curr);
 			assert as != null;
 
-			Collections.shuffle(inputs_rnd);
+			if (shuffle_inputs) Collections.shuffle(inputs_rnd);
 			for (String in : inputs_rnd) {
 				Integer succ = automaton.getSuccessor(curr, in);
 				if (succ == null) {

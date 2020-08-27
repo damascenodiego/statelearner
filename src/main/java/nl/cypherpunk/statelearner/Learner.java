@@ -227,7 +227,7 @@ public class Learner {
 		List<String> abc_lst = new ArrayList<>(alphabet);
 		LinkedHashSet<Word<String>> qSet = new LinkedHashSet<>();
 		LinkedHashSet<Word<String>> tSet = new LinkedHashSet<>();
-		Utils.randomTransitionCover(hypothesis, abc_lst, qSet, tSet);
+		Utils.transitionCover(hypothesis, abc_lst, qSet, tSet, false);
 		for (Word<String> seq : tSet) {
 			for (int sampleID = 0; sampleID < config.nr_tio; sampleID++) {
 				TimeUnit.MILLISECONDS.sleep(config.reset_delay);
